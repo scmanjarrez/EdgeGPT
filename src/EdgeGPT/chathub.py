@@ -156,7 +156,8 @@ class ChatHub:
                         ):
                             try:
                                 async with ImageGenAsync(
-                                    all_cookies=self.cookies,
+                                        all_cookies=self.cookies,
+                                        quiet=True,
                                 ) as image_generator:
                                     images = await image_generator.get_images(
                                         response["arguments"][0]["messages"][0]["text"],
@@ -208,12 +209,8 @@ class ChatHub:
                             f"{response['item']['result']['value']}: {response['item']['result']['message']}",
                         )
                     if draw:
-                        cache = response["item"]["messages"][1]["adaptiveCards"][0][
-                            "body"
-                        ][0]["text"]
-                        response["item"]["messages"][1]["adaptiveCards"][0]["body"][0][
-                            "text"
-                        ] = (cache + resp_txt)
+                        cache = response["item"]["messages"][2]["adaptiveCards"][0]["body"][0]["text"]
+                        response["item"]["messages"][2]["adaptiveCards"][0]["body"][0]["text"] = (cache + resp_txt)
                     if (
                         response["item"]["messages"][-1]["contentOrigin"] == "Apology"
                         and resp_txt
