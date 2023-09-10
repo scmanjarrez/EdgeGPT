@@ -5,7 +5,6 @@ import re
 import sys
 from pathlib import Path
 
-from EdgeGPT.EdgeGPT import Chatbot
 from prompt_toolkit import PromptSession
 from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
 from prompt_toolkit.completion import WordCompleter
@@ -13,6 +12,8 @@ from prompt_toolkit.history import InMemoryHistory
 from prompt_toolkit.key_binding import KeyBindings
 from rich.live import Live
 from rich.markdown import Markdown
+
+from EdgeGPT.EdgeGPT import Chatbot
 
 
 def create_session() -> PromptSession:
@@ -101,7 +102,10 @@ async def async_main(args: argparse.Namespace) -> None:
             question = (
                 input()
                 if args.enter_once
-                else await get_input_async(session=session, completer=completer)
+                else await get_input_async(
+                    session=session,
+                    completer=completer,
+                )
             )
         print()
         p_hist(question + "\n")
@@ -153,7 +157,11 @@ async def async_main(args: argparse.Namespace) -> None:
                                 p_hist(response[wrote:], end="")
                             if wrote > len(response):
                                 print(md)
-                                print(Markdown("***Bing revoked the response.***"))
+                                print(
+                                    Markdown(
+                                        "***Bing revoked the response.***",
+                                    ),
+                                )
                             wrote = len(response)
                             md = Markdown(response)
                             live.update(md, refresh=True)

@@ -82,4 +82,6 @@ class LocationHint(Enum):
     }
 
 
-LOCATION_HINT_TYPES = Optional[Union[LocationHint, Literal["USA", "CHINA", "EU", "UK"]]]
+LOCATION_HINT_TYPES = Optional[
+    Union[LocationHint, Literal["USA", "CHINA", "EU", "UK"]]
+]

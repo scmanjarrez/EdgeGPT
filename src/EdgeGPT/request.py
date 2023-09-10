@@ -2,11 +2,8 @@ import uuid
 from datetime import datetime
 from typing import Union
 
-from .conversation_style import CONVERSATION_STYLE_TYPE
-from .conversation_style import ConversationStyle
-from .utilities import get_location_hint_from_locale
-from .utilities import get_ran_hex
-from .utilities import guess_locale
+from .conversation_style import CONVERSATION_STYLE_TYPE, ConversationStyle
+from .utilities import get_location_hint_from_locale, get_ran_hex, guess_locale
 
 
 class ChatHubRequest:
@@ -40,7 +37,10 @@ class ChatHubRequest:
         ]
         if conversation_style:
             if not isinstance(conversation_style, ConversationStyle):
-                conversation_style = getattr(ConversationStyle, conversation_style)
+                conversation_style = getattr(
+                    ConversationStyle,
+                    conversation_style,
+                )
             options = conversation_style.value
         message_id = str(uuid.uuid4())
         # Get the current local time
@@ -60,7 +60,9 @@ class ChatHubRequest:
         offset_string = f"{offset_hours:+03d}:{offset_minutes:02d}"
 
         # Get current time
-        timestamp = datetime.now().strftime("%Y-%m-%dT%H:%M:%S") + offset_string
+        timestamp = (
+            datetime.now().strftime("%Y-%m-%dT%H:%M:%S") + offset_string
+        )
         self.struct = {
             "arguments": [
                 {
@@ -140,7 +142,9 @@ class ChatHubRequest:
                 "InternalLoaderMessage",
                 "RenderCardRequest",
             ]
-            self.struct["arguments"][0]["allowedMessageTypes"] += have_search_result
+            self.struct["arguments"][0][
+                "allowedMessageTypes"
+            ] += have_search_result
         if webpage_context:
             self.struct["arguments"][0]["previousMessages"] = [
                 {

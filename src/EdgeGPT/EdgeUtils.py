@@ -6,8 +6,7 @@ from pathlib import Path
 
 from log2d import Log
 
-from .EdgeGPT import Chatbot
-from .EdgeGPT import ConversationStyle
+from .EdgeGPT import Chatbot, ConversationStyle
 from .ImageGen import ImageGen
 
 Log("BingChat")
@@ -177,7 +176,11 @@ class Query:
             output_dir=self.__class__.image_dir_path,
         )
 
-    async def send_to_bing(self, echo: bool = True, echo_prompt: bool = False) -> str:
+    async def send_to_bing(
+        self,
+        echo: bool = True,
+        echo_prompt: bool = False,
+    ) -> str:
         """Creat, submit, then close a Chatbot instance.  Return the response"""
         retries = len(Cookie.files()) or 1
         while retries:
@@ -316,7 +319,9 @@ class Query:
         try:
             return [
                 x["text"]
-                for x in self.response["item"]["messages"][1]["suggestedResponses"]
+                for x in self.response["item"]["messages"][1][
+                    "suggestedResponses"
+                ]
             ]
         except KeyError:
             return None
@@ -325,7 +330,9 @@ class Query:
         return f"<EdgeGPT.Query: {self.prompt}>"
 
     def __str__(self) -> str:
-        return self.output if self.simplify_response else "\n\n".join(self.output)
+        return (
+            self.output if self.simplify_response else "\n\n".join(self.output)
+        )
 
 
 class ImageQuery(Query):
@@ -345,7 +352,9 @@ def test_cookie_rotation() -> None:
         )
         log(f"{i}: {Cookie.current_file_path.name}")
         log(q.code)
-        log(f"Cookie count: {Cookie.request_count.get(Cookie.current_file_path.name)}")
+        log(
+            f"Cookie count: {Cookie.request_count.get(Cookie.current_file_path.name)}",
+        )
 
 
 def test_features() -> Query:
@@ -368,7 +377,7 @@ def test_features() -> Query:
         print(f"{Cookie.ignore_files=}")
         print(f"{Cookie.supplied_files=}")
         print(
-            f"{Cookie.request_count=}"
+            f"{Cookie.request_count=}",
         )  # Keeps a tally of requests made in using each cookie file during this session
         print(f"{q=}")
         print(f"{q.prompt=}")
@@ -384,7 +393,7 @@ def test_features() -> Query:
         print(f"{q.code=}")  # All code as a single string
         print(f"{q.code_blocks=}")  # Individual code blocks
         print(
-            f"{q.code_block_formats=}"
+            f"{q.code_block_formats=}",
         )  # The language/format of each code block (if given)
         print(f"{Query.index=}")  # Keeps an index of Query objects created
         print(f"{Query.image_dir_path=}")

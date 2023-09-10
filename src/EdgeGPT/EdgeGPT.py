@@ -49,18 +49,20 @@ class Chatbot:
         """
         Save the conversation to a file
         """
-        with open(filename, "w") as f:
+        with open(filename, 'w') as f:
             conversation_id = self.chat_hub.request.conversation_id
-            conversation_signature = self.chat_hub.request.conversation_signature
+            conversation_signature = (
+                self.chat_hub.request.conversation_signature
+            )
             client_id = self.chat_hub.request.client_id
             invocation_id = self.chat_hub.request.invocation_id
             f.write(
                 json.dumps(
                     {
-                        "conversation_id": conversation_id,
-                        "conversation_signature": conversation_signature,
-                        "client_id": client_id,
-                        "invocation_id": invocation_id,
+                        'conversation_id': conversation_id,
+                        'conversation_signature': conversation_signature,
+                        'client_id': client_id,
+                        'invocation_id': invocation_id,
                     },
                 ),
             )
@@ -72,10 +74,10 @@ class Chatbot:
         with open(filename) as f:
             conversation = json.load(f)
             self.chat_hub.request = ChatHubRequest(
-                conversation_signature=conversation["conversation_signature"],
-                client_id=conversation["client_id"],
-                conversation_id=conversation["conversation_id"],
-                invocation_id=conversation["invocation_id"],
+                conversation_signature=conversation['conversation_signature'],
+                client_id=conversation['client_id'],
+                conversation_id=conversation['conversation_id'],
+                invocation_id=conversation['invocation_id'],
             )
 
     async def get_conversation(self) -> dict:
@@ -93,7 +95,7 @@ class Chatbot:
     async def ask(
         self,
         prompt: str,
-        wss_link: str = "wss://sydney.bing.com/sydney/ChatHub",
+        wss_link: str = 'wss://sydney.bing.com/sydney/ChatHub',
         conversation_style: CONVERSATION_STYLE_TYPE = None,
         webpage_context: str | None = None,
         search_result: bool = False,
@@ -124,57 +126,61 @@ class Chatbot:
             if final:
                 if not simplify_response:
                     return response
-                messages_left = response["item"]["throttling"][
-                    "maxNumUserMessagesInConversation"
-                ] - response["item"]["throttling"].get(
-                    "numUserMessagesInConversation",
+                messages_left = response['item']['throttling'][
+                    'maxNumUserMessagesInConversation'
+                ] - response['item']['throttling'].get(
+                    'numUserMessagesInConversation',
                     0,
                 )
                 if messages_left == 0:
-                    raise Exception("Max messages reached")
-                message = ""
-                for msg in reversed(response["item"]["messages"]):
-                    if msg.get("adaptiveCards") and msg["adaptiveCards"][0]["body"][
-                        0
-                    ].get("text"):
+                    raise Exception('Max messages reached')
+                message = ''
+                for msg in reversed(response['item']['messages']):
+                    if msg.get('adaptiveCards') and msg['adaptiveCards'][0][
+                        'body'
+                    ][0].get('text'):
                         message = msg
                         break
                 if not message:
-                    raise Exception("No message found")
+                    raise Exception('No message found')
                 suggestions = [
-                    suggestion["text"]
-                    for suggestion in message.get("suggestedResponses", [])
+                    suggestion['text']
+                    for suggestion in message.get('suggestedResponses', [])
                 ]
-                adaptive_cards = message.get("adaptiveCards", [])
+                adaptive_cards = message.get('adaptiveCards', [])
                 adaptive_text = (
-                    adaptive_cards[0]["body"][0].get("text") if adaptive_cards else None
+                    adaptive_cards[0]['body'][0].get('text')
+                    if adaptive_cards
+                    else None
                 )
                 sources = (
-                    adaptive_cards[0]["body"][0].get("text") if adaptive_cards else None
+                    adaptive_cards[0]['body'][0].get('text')
+                    if adaptive_cards
+                    else None
                 )
                 sources_text = (
-                    adaptive_cards[0]["body"][-1].get("text")
+                    adaptive_cards[0]['body'][-1].get('text')
                     if adaptive_cards
                     else None
                 )
                 return {
-                    "text": message["text"],
-                    "author": message["author"],
-                    "sources": sources,
-                    "sources_text": sources_text,
-                    "suggestions": suggestions,
-                    "messages_left": messages_left,
-                    "max_messages": response["item"]["throttling"][
-                        "maxNumUserMessagesInConversation"
+                    'text': message['text'],
+                    'author': message['author'],
+                    'sources': sources,
+                    'sources_text': sources_text,
+                    'suggestions': suggestions,
+                    'messages_left': messages_left,
+                    'max_messages': response['item']['throttling'][
+                        'maxNumUserMessagesInConversation'
                     ],
-                    "adaptive_text": adaptive_text,
+                    'adaptive_text': adaptive_text,
                 }
         return {}
 
     async def ask_stream(
         self,
         prompt: str,
-        wss_link: str = "wss://sydney.bing.com/sydney/ChatHub",
+        wss_link: str = 'wss://sydney.bing.com/sydney/ChatHub',
         conversation_style: CONVERSATION_STYLE_TYPE = None,
         raw: bool = False,
         webpage_context: str | None = None,
@@ -225,13 +231,16 @@ class Chatbot:
         else:
             await self.close()
         self.chat_hub = ChatHub(
-            await Conversation.create(self.proxy, cookies=self.chat_hub.cookies),
+            await Conversation.create(
+                self.proxy,
+                cookies=self.chat_hub.cookies,
+            ),
             proxy=self.proxy,
             cookies=self.chat_hub.cookies,
         )
 
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     from .main import main
 
     main()

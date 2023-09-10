@@ -1,9 +1,12 @@
 repos:
-  - repo: https://github.com/asottile/reorder_python_imports
-    rev: v3.9.0
+  - repo: local
     hooks:
-      - id: reorder-python-imports
-        args: [--py37-plus]
+      - id: usort
+        name: Import sorter
+        entry: bash -c 'usort format "$@"; git add -u'
+        language: python
+        files: \.py$
+
   - repo: https://github.com/asottile/add-trailing-comma
     rev: v2.3.0
     hooks:
@@ -25,7 +28,11 @@ repos:
       - id: double-quote-string-fixer
       - id: name-tests-test
       - id: requirements-txt-fixer
-  - repo: https://github.com/psf/black
-    rev: 22.10.0
+
+  - repo: local
     hooks:
       - id: black
+        name: Formatter
+        entry: bash -c 'black -l 79 "$@"; git add -u'
+        language: python
+        files: \.py$
