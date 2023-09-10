@@ -1,7 +1,6 @@
 from pathlib import Path
 
-from setuptools import find_packages
-from setuptools import setup
+from setuptools import find_packages, setup
 
 DOCS_PATH = Path(__file__).parents[0] / "docs/README.md"
 PATH = Path("README.md")
@@ -12,7 +11,7 @@ if not PATH.exists():
 
 setup(
     name="EdgeGPT",
-    version="0.13.2",
+    version="0.13.3",
     license="The Unlicense",
     author="Antonio Cheong",
     author_email="acheong@student.dalat.org",
@@ -20,7 +19,9 @@ setup(
     packages=find_packages("src"),
     package_dir={"": "src"},
     url="https://github.com/acheong08/EdgeGPT",
-    project_urls={"Bug Report": "https://github.com/acheong08/EdgeGPT/issues/new"},
+    project_urls={
+        "Bug Report": "https://github.com/acheong08/EdgeGPT/issues/new"
+    },
     entry_points={
         "console_scripts": [
             "edge-gpt = EdgeGPT.main:main",

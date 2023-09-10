@@ -3,7 +3,7 @@ repos:
     hooks:
       - id: usort
         name: Import sorter
-        entry: bash -c 'usort format "$@"; git add -u'
+        entry: bash -c 'usort format "$@"; git add -u' --
         language: python
         files: \.py$
 
@@ -33,6 +33,6 @@ repos:
     hooks:
       - id: black
         name: Formatter
-        entry: bash -c 'black -l 79 "$@"; git add -u'
+        entry: bash -c 'black -l 79 "$@"; git add -u' --
         language: python
         files: \.py$
